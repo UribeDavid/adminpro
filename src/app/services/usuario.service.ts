@@ -36,6 +36,14 @@ export class UsuarioService {
     return this.usuario.uid || '';
   }
 
+  get headers() {
+    return {
+      headers: {
+        'token': this.token
+      }
+    }
+  }
+
   googleInit() {
 
     return new Promise ( resolve => {
@@ -79,6 +87,35 @@ export class UsuarioService {
     )
   }
 
+  cargarUsuarios( desde: number = 0 ) {
+    return this.http.get(`${base_url}/usuarios?desde=${ desde }`, this.headers)
+            .pipe(
+              map( (response: any) => {
+                console.log(response)
+                const usuarios = response.usuarios.map( user => {
+                  return new Usuario(
+                    user.nombre,
+                    user.email,
+                    '',
+                    user.img,
+                    user.google,
+                    user.role,
+                    user.uid
+                  )
+                });
+
+                console.log(usuarios)
+
+                return {
+                  ok: response.ok,
+                  usuarios,
+                  totalRegistros: response.totalRegistros,
+                  uid: response.uid
+                }
+              })
+            );
+  }
+
   crearUsuario( formData: RegisterForm ) {
 
     return this.http.post( `${base_url}/usuarios`, formData )
@@ -89,13 +126,18 @@ export class UsuarioService {
       )
   }
 
+  eliminarUsuario( uid: string ) {
+    return this.http.delete(`${ base_url }/usuarios/${ uid }`, this.headers);
+  }
+
   actualizarPerfil( data: { email: string, nombre: string }) {
 
-    return this.http.put(`${ base_url }/usuarios/${ this.uid }`, { ...data, role: this.usuario.role}, {
-      headers: {
-        'token': this.token
-      }
-    });
+    return this.http.put(`${ base_url }/usuarios/${ this.uid }`, {...data, role: this.usuario.role }, this.headers);
+  }
+
+  actualizarUsuario( usuario: Usuario ) {
+
+    return this.http.put(`${ base_url }/usuarios/${ usuario.uid }`, usuario, this.headers);
   }
 
   login( formData: LoginForm) {
