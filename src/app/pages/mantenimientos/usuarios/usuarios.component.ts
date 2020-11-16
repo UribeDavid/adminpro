@@ -74,7 +74,6 @@ export class UsuariosComponent implements OnInit {
     this.cargando = true;
     this.busquedasService.buscar('usuarios', termino).subscribe(
       (response: any) => {
-        console.log(response.resultados);
         if (response.ok) {
           this.usuarios = response.resultados;
           this.cargando = false;

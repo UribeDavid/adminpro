@@ -27,26 +27,31 @@ export class BusquedasService {
   }
 
   buscar( tipo: 'usuarios' | 'medicos' | 'hospitales', termino: string) {
-    return this.http.get(`${ base_url }/todo/coleccion/${ tipo }/${ termino }`, this.headers)
-            .pipe(
-              map( (response: any) => {
-                const resultados = response.resultados.map(
-                  user => new Usuario(
-                    user.nombre,
-                    user.email,
-                    '',
-                    user.img,
-                    user.google,
-                    user.role,
-                    user.uid
-                  )
-                )
 
-                return {
-                  ok: response.ok,
-                  resultados
-                }
-              })
-            );
+    if ( tipo == 'hospitales' || tipo == 'medicos' ) {
+      return this.http.get(`${ base_url }/todo/coleccion/${ tipo }/${ termino }`, this.headers);
+    } else {
+      return this.http.get(`${ base_url }/todo/coleccion/${ tipo }/${ termino }`, this.headers)
+              .pipe(
+                map( (response: any) => {
+                  const resultados = response.resultados.map(
+                    user => new Usuario(
+                      user.nombre,
+                      user.email,
+                      '',
+                      user.img,
+                      user.google,
+                      user.role,
+                      user.uid
+                    )
+                  )
+
+                  return {
+                    ok: response.ok,
+                    resultados
+                  }
+                })
+              );
+    }
   }
 }
