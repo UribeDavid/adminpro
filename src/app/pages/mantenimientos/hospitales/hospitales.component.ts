@@ -58,7 +58,6 @@ export class HospitalesComponent implements OnInit, OnDestroy {
 
     this.busquedasService.buscar('hospitales', termino).subscribe(
       (response: any) => {
-        console.log(response);
         if (response.ok) {
           this.hospitales = response.resultados;
           this.cargando = false;

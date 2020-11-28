@@ -59,7 +59,6 @@ export class PerfilComponent implements OnInit {
 
     reader.onloadend = () => {
       this.imagenTemp = reader.result;
-      console.log(reader.result);
     }
   }
 

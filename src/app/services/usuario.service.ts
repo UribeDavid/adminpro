@@ -32,6 +32,10 @@ export class UsuarioService {
     return localStorage.getItem('token') || '';
   }
 
+  get role(): string {
+    return this.usuario.role;
+  }
+
   get uid(): string {
     return this.usuario.uid || '';
   }
@@ -60,6 +64,7 @@ export class UsuarioService {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('menu');
     this.auth2.signOut().then( () => {
       this.ngZone.run( () => {
         this.router.navigateByUrl('/login');
@@ -81,6 +86,8 @@ export class UsuarioService {
 
         localStorage.setItem('token', response.token);
 
+        localStorage.setItem('menu', JSON.stringify(response.menu));
+
         return true;
       }),
       catchError( err => of(false))
@@ -91,7 +98,6 @@ export class UsuarioService {
     return this.http.get(`${base_url}/usuarios?desde=${ desde }`, this.headers)
             .pipe(
               map( (response: any) => {
-                console.log(response)
                 const usuarios = response.usuarios.map( user => {
                   return new Usuario(
                     user.nombre,
@@ -103,8 +109,6 @@ export class UsuarioService {
                     user.uid
                   )
                 });
-
-                console.log(usuarios)
 
                 return {
                   ok: response.ok,
@@ -122,6 +126,7 @@ export class UsuarioService {
       .pipe(
         tap( (response: any) => {
           localStorage.setItem('token', `${response.token}`);
+          localStorage.setItem('menu', `${JSON.stringify(response.menu)}`);
         })
       )
   }
@@ -146,6 +151,7 @@ export class UsuarioService {
       .pipe(
         tap( (response: any) => {
           localStorage.setItem('token', `${response.token}`);
+          localStorage.setItem('menu', `${JSON.stringify(response.menu)}`);
         })
       )
   }
@@ -156,6 +162,7 @@ export class UsuarioService {
       .pipe(
         tap( (response: any) => {
           localStorage.setItem('token', `${response.token}`);
+          localStorage.setItem('menu', `${JSON.stringify(response.menu)}`);
         })
       )
   }

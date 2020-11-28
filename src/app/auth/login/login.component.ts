@@ -46,7 +46,6 @@ export class LoginComponent implements OnInit {
         this.router.navigateByUrl('/');
       }, err => Swal.fire('Error', err.error.msg, 'error')
     );
-    console.log(this.loginForm.value);
     // this.router.navigateByUrl('/');
   }
 
